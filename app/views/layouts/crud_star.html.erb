@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <title><%= CrudStar::Engine.config.application_name %></title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        
+        <%= stylesheet_link_tag 'crud_star/reset.css' %>
+        <%= stylesheet_link_tag 'crud_star/' + CrudStar::Engine.config.theme + '.css' %>
+        <%= stylesheet_link_tag 'crud_star/admin.css' %>
+        <%= stylesheet_link_tag 'aristo/jquery-ui-1.8.5.custom.css' %>
+        <%= stylesheet_link_tag 'formtastic/formtastic.css' %>
+        <%= stylesheet_link_tag 'formtastic/formtastic_changes.css' %>
+        <%= stylesheet_link_tag 'application.css' if Rails.root.join('public', 'stylesheets', 'application.css').exist? %>
+        <%= stylesheet_link_tag :crud_star_app if ActionView::Helpers::AssetTagHelper.stylesheet_expansions.has_key?(:crud_star_app) %>
+        <%= javascript_include_tag :crud_star %>
+        <%= javascript_include_tag :crud_star_app if ActionView::Helpers::AssetTagHelper.javascript_expansions.has_key?(:crud_star_app) %>
+        
+        <%= csrf_meta_tag %>
+		
+        <!--[if lte IE 6]>
+            <%= stylesheet_link_tag('crud_star/ie6.css') %>
+        <![endif]-->
+
+        <%= yield :javascript %>
+    </head>
+    
+    <body>
+        <div id="header">
+            <h1><%= CrudStar::Engine.config.application_name %></h1>
+            <div id="login"><p>Logged in as: <%= current_user.username %> | <%= link_to 'Logout »', send(CrudStar::Utility.path_for_resource(:logout)) %></p></div>
+            <div class="clear"></div>
+        </div>
+		
+        <div id="navi">
+          <%= global_search if respond_to? :global_search %>
+          <ul id="navtabs">
+            	
+          <% CrudStar::Engine.config.navigation.each do |nav| %>
+            <%
+              options = []
+            
+              if nav.class == Array
+                tab = nav.first
+                options = nav.last
+              else
+                tab = nav
+              end
+              
+              if !options.empty? and options.include?(controller.controller_name.intern)
+                @subnav = options
+              end
+            %>
+          
+            <% if tab == :dashboard %>
+              <li<%= raw(controller.controller_name == 'index' ? ' id="current"' : nil) %>><%= link_to('Dashboard', self.send(CrudStar::Utility.path_for_resource(tab))) %></li>
+            <% else %>
+              <% label = (tab.class == Symbol ? tab.to_s.singularize.camelize.constantize.model_name.human.pluralize : tab) %>
+              <% path = (tab.class == Symbol ? self.send(CrudStar::Utility.path_for_resources(tab)) : self.send(CrudStar::Utility.path_for_resources(options.first))) %>
+              <li<%= raw(' id="current"') if controller.controller_name != 'index' and request.path =~ /^#{path}/ %>><%= link_to(label, path) %></li>
+            <% end %>
+          <% end %>
+          <% if respond_to? :app_navigation %>
+            <% app_navigation.each do |label, path| %>
+              <li<%= raw(' id="current"') if controller.controller_name != 'index' and request.path =~ /^#{path}/ %>><%= link_to(label, path) %></li>
+            <% end %>        
+          <% end %>
+          </ul>
+          <div class="clear"></div>
+        </div>
+		
+        <% unless @subnav.blank? %>
+          <div id="subnavi">      
+            <ul id="subnav">
+              <% @subnav.each do |tab| %>
+                <li<%= raw(' id="sub-current"') if request.path == tab[:path] or tab[:highlighted]  %>><%= link_to(tab[:label], tab[:path]) %></li>
+              <% end %>
+            </ul>
+            <div class="clear"></div>
+          </div>
+        <% end %>
+        
+        <%= yield -%>
+        
+        <div class="clear"></div>
+        
+    </body>
+</html>

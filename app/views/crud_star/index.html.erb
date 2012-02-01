@@ -1,0 +1,66 @@
+<div id="content">
+	
+  <h2><%= @page_title || model_name.pluralize %></h2>
+	
+	<%=
+		partial = CrudStar::Utility.get_action_help(model, 'index')
+		render(:partial => partial) unless partial.nil?
+	%>
+	
+	<% if flash[:deleted] %>
+     <p class="alert-ok">The <%= model_name.downcase %> has been deleted.</p>
+  <% end %>
+	
+	<% if flash[:notify] %>
+     <p class="alert-ok"><%= flash[:notify] %></p>
+  <% end %>
+	
+	<% unless @list.nil? or @list.empty? %>
+	   
+    <%= render :partial => @list_filter_partial %>
+
+    <% unless !controller.respond_to?(:export_attributes) || controller.export_attributes.nil? %>
+       <button class="button" onclick="window.location = '<%= url_for :format => :csv, :conditions => params[:conditions] %>'; return false;">Export CSV</button><br /><br />
+    <% end %>
+
+    <div id="list">
+      <%= render :partial => @list_partial %>
+    </div>
+	   
+	<% else %>
+    
+      <div class="blankStateMessage">
+        	
+        <% unless params[:conditions].blank? and params[:search].blank? %>
+          <%= render :partial => @list_filter_partial %>
+          <p class="alert-tip">There are no <%= model_name.pluralize.downcase %> which match your filter criteria.</p>
+        <% else %>
+          <p class="alert-tip">
+            There are no <%= model_name.pluralize.downcase %> added yet.
+            <% if user_has_permission?(:new) %>
+                Now might be a good time to <%= link_to 'add a ' + model_name.downcase, send(path_for_new_resource(model)) %>!
+            <% end %>
+          </p>
+        <% end %>
+
+      </div>
+    
+  <% end %>
+</div>
+
+<% if user_has_permission?(:new) or sidebar_actions_for_user[:list].present? %>
+
+  <div id="sidebar">
+      <h5>Resources</h5>
+      <ul id="sidebar-nav">
+        <% if user_has_permission?(:new) %>
+          <li><%= link_to 'Add a ' + model_name, send(path_for_new_resource(model)) %></li>
+        <% end %>
+        
+        <% sidebar_actions_for_user(:list).each do |option| %>
+          <li><%= link_to(option.first, option.last) %></li>
+        <% end %>
+      </ul>
+  </div>
+
+<% end %>

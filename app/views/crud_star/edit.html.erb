@@ -1,0 +1,34 @@
+<div id="content">
+	
+  <h2>Edit <%= model_name %></h2>
+	
+	<%=
+		partial = CrudStar::Utility.get_action_help(controller.model, 'new')
+		render(:partial => partial) unless partial.nil?
+	%>
+	
+	<div id="edit_form" class="form">
+    <%= render :partial => 'crud_star/errors', :locals => { :errors => @item.errors } unless @item.errors.empty? %>
+    <%= semantic_form_for @item, :url => send(path_for_resource(@item.class), @item), :method => 'put', :multipart => true do |form| %>
+      <%= hidden_field_tag :id, @item_id %>
+      <%= try_to_render_partial([ 'edit_form', 'form' ], :form => form, :item => @item) do %>
+        <%= form.inputs %>
+        <%= form.buttons %>
+      <% end %>
+    <% end %>
+	</div>
+</div>
+
+<div id="sidebar">
+    <h5>Resources</h5>
+    <ul id="sidebar-nav">
+		
+      <li><%= link_to 'Cancel', self.send(path_for_resource(controller.model)) %></li>
+      <%
+		  unless sidebar_actions_for_user(:edit).nil?
+        sidebar_actions_for_user(:edit).each do |option| %>
+          <li><%= link_to option.first, option.last %></li>
+     <% end
+      end %>
+    </ul>
+</div>

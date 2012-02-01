@@ -1,0 +1,20 @@
+<h3><%= association.name.to_s.titleize %></h3>
+    
+<%=
+	partial = CrudStar::Utility.get_action_help(association.klass, 'new_associated')
+	render(:partial => partial) unless partial.nil?
+%>
+
+<%
+   # List all of the currently associated items.
+   @list = @item.send(association.name.to_s)
+%>
+
+<% unless @list.nil? or @list.empty? %>
+   <div id="<%= association.klass.name.underscore %>_list"><%= render :partial => CrudStar::Utility.get_partial(params[:controller], 'list_associated') + '.html', :locals => {:association => association} %></div>
+<% else %>
+    <p>There are no <%= association.klass.name.humanize.pluralize.downcase %> added yet.</p>
+<% end %>
+
+
+<%= render(:partial => CrudStar::Utility.get_partial(params[:controller], 'new_associated') + '.html', :locals => {:association => association, :attribute => attribute}) %>

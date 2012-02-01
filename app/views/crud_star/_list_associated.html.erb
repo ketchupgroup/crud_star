@@ -1,0 +1,23 @@
+<%=
+	partial = CrudStar::Utility.get_action_help(@list[0].class, 'list_associated')
+	render(:partial => partial) unless partial.nil?
+%>
+
+<table cellpadding="0" cellspacing="0" border="0">
+	
+    <tbody>
+        <%
+          @list.each do |item|
+
+            url_params = {:id => @item_id.to_s, :association_name => association.name, :item => {:id => item.id}}
+        %>
+	        <tr>
+                <td><a href="<%= self.send(path_for_resource(item.class), item) %>"><%= get_value(item, item.class.crud_star_options[:default_attribute]) %></a></td>
+				
+				<% if ['edit', 'add_associated', 'delete_associated'].include? controller.action_name %>
+                    <td><%= link_to(image_tag('crud_star/icon-delete.gif', :size => '12x12', :alt => 'Delete'), self.send('delete_associated_' + CrudStar::Utility.path_for_resource(controller.model), url_params), :remote => true, :method => :delete, :class => 'delete_associated', :update => 'associated_' + association.klass.name.underscore) %></td>
+				<% end %>
+	        </tr>
+        <% end %>
+    </tbody>
+</table>

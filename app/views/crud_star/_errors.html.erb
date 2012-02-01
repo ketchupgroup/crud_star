@@ -1,0 +1,16 @@
+<% unless errors.nil? or errors.empty? %>
+  <div class="alert-wrong" id="errorExplanation">
+    <% if errors.is_a?(String) %>
+      <p><%= errors %></p>
+    <% else %>
+      <% errors = errors.full_messages if errors.respond_to? :full_messages %>
+      <p>The follow problems were found with the details you provided:</p>
+      <ul>
+        <% errors.each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  <br />
+<% end %>

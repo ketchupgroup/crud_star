@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+    <head>
+        <title><%= CrudStar::Engine.config.application_name %> Admin</title>
+        
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		
+        <%= stylesheet_link_tag('crud_star/reset.css') %>
+        <%= stylesheet_link_tag('crud_star/' + CrudStar::Engine.config.theme + '.css') %>
+        <%= stylesheet_link_tag('crud_star/admin.css') %>
+        <%= stylesheet_link_tag('aristo/jquery-ui-1.8.5.custom.css') %>
+        <%= stylesheet_link_tag('formtastic/formtastic.css') %>
+        <%= stylesheet_link_tag('formtastic/formtastic_changes.css') %>
+        <%= stylesheet_link_tag('application.css') if Rails.root.join('public', 'stylesheets', 'application.css').exist? %>
+        
+        <%= javascript_include_tag :crud_star, :crud_star_app %>
+        		
+        <%= csrf_meta_tag %>
+		
+        <!--[if lte IE 6]>
+            <%= stylesheet_link_tag('crud_star/ie6.css') %>
+        <![endif]-->
+
+		<%= yield :javascript %>
+        
+    </head>
+    
+    <body>
+		
+        <div id="header">
+            <h1><%= CrudStar::Engine.config.application_name %> Admin</h1>
+            <div class="clear"></div>
+        </div>
+    
+        <div id="loginarea">
+            
+            <div id="login-welcome">
+                <h3>Welcome to <%= CrudStar::Engine.config.application_name %>. Please log in:</h3>
+            </div>
+            <% if flash[:session_expired] %>
+              <div class="alert-wrong" id="errorExplanation">
+                <p><%= flash[:session_expired] %></p>
+              </div>
+              <br />
+            <% end %>
+
+            <%= render :partial => 'crud_star/errors', :locals => {:errors => flash[:errors]} %>
+            
+            <div id="loginform">
+                <%= form_tag do -%>
+	                <label for="loginUser">User Name</label>
+                  <input type="text" name="user" id="loginUser" class="loginfield" value="<%= params[:user] %>" />
+                  <label for="loginPassword">Password</label>
+	                <input type="password" name="password" id="loginPassword" class="loginfield" value="<%= params[:password] %>" />
+	                <input type="submit" name="button" class="loginbutton" value="Login" />
+                <% end -%>
+            </div>
+        
+        </div>
+        
+    </body>
+    
+</html>

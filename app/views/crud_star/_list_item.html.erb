@@ -1,0 +1,19 @@
+<tr>
+  <%
+    list_item.class.list_attributes[session[:crud_star][:role]].each do |attribute| %>
+
+      <td>
+        <%=
+          value = get_value(list_item, attribute)
+          if attribute.to_s == list_item.class.crud_star_options[:default_attribute].to_s
+            link_to(display_value(list_item, attribute), self.send(path_for_resource(list_item.class), list_item))
+          else
+            display_value(list_item, attribute) || raw('<em>Undefined</em>')
+          end
+        %>
+      </td>
+
+      <%
+    end
+  %>
+</tr>

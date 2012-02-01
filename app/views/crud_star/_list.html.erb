@@ -1,0 +1,39 @@
+<table cellpadding="0" cellspacing="0" border="0">
+	<% if controller.respond_to?(:list_attributes) %>
+    <thead>
+      <tr>
+      <% controller.list_attributes.each do |attribute| %>
+        <th><%=
+          name = find_translation(attribute)
+          if @list.first.attribute_names.include?(attribute.to_s)
+            list_header_sortable(name, self.send(path_for_resources(@list.first.class)), attribute.to_s, params[:conditions])
+          else
+            name
+          end
+        %></th>
+        <% end %>
+        <% if can?(:destroy, @list.first.class) || can?(:update, @list.first.class) %>
+          <th></th>
+        <% end %>
+      </tr>
+    </thead>
+	<% end %>
+	
+  <tbody>
+    <%= try_to_render_partial('list_item', {}, :collection => @list, :as => :list_item) do %>
+      <% @list.each do |list_item| %>
+        <tr id="<%= dom_id(list_item) %>" class="<%= dom_class(list_item) %>">
+          <% controller.list_attributes.each do |attribute| %>
+            <td><%= list_item.send(attribute).to_s %></td>
+          <% end %>
+          <% if can?(:destroy, list_item) || can?(:update, list_item) %>
+            <td>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= list_pagination_links(@list, nil) %>

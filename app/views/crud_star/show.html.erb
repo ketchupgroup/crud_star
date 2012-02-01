@@ -1,0 +1,109 @@
+<div id="content">
+	
+  <h2><%= @page_title || model_name.humanize %>: <%= @item %></h2>
+  
+  <% if flash[:updated] %>
+     <% if @update_message.present? %>
+       <p class="alert-ok"><%= @update_message %></p>
+     <% else %>
+       <p class="alert-ok">Changes to the <%= model_name.humanize.downcase %> have been saved.</p>
+     <% end %>
+  
+  <% elsif flash[:created] %>
+     <p class="alert-ok">The <%= model_name.humanize.downcase %> has been added.</p>
+	<% end %>
+	
+	<% if flash[:notify] %>
+	   <p class="alert-ok"><%= flash[:notify] %></p>
+	<% end %>
+	
+	<%= render :partial => 'crud_star/errors', :locals => {:errors => flash[:errors]} %> 
+
+	<%= try_to_render_partial("help_show") %>
+  
+  <%= try_to_render_partial('attributes', :item => @item) do %>
+    <table cellpadding="0" cellspacing="0" border="0">
+      <%
+      associations = []
+      attributes = model.respond_to?(:view_attributes) ? model.view_attributes[session[:crud_star][:role]] : model.new.attributes.keys
+      attributes.each do |attribute|
+        hierarchy = attribute.split('.')
+        association = CrudStar::Utility.get_association(controller.model, attribute)
+        if association.nil? or ((association.macro == :belongs_to or association.macro == :has_one) and (!association.klass.respond_to?('view_associated_attributes')))
+        %>
+          <tr>
+            <th><%= attribute.split('.').last.humanize %></th>
+            <td><%= display_value(@item, attribute) || raw('<em>Undefined</em>') %></td>
+          </tr>
+        <%
+        else
+          associations << attribute
+        end
+      end
+      %>
+    </table>
+    
+    <%
+    associations.each do |attribute|
+          
+      association = CrudStar::Utility.get_association(controller.model, attribute)
+
+      if association.belongs_to?
+      %>
+        <h3><%= attribute.split('.').last.titleize %></h3>
+        
+        <table cellpadding="0" cellspacing="0" border="0">
+          <% association.klass.view_associated_attributes[session[:crud_star][:role]].each do |associated_attribute| %>
+            <tr>
+              <th><%= associated_attribute.humanize %></th>
+              <td><%= display_value(@item, attribute + '.' + associated_attribute) || '<em>Undefined</em>' %></td>
+            </tr>
+          <% end %>
+        </table>
+      <%
+      elsif (association.macro == :has_many) or (association.macro == :has_and_belongs_to_many)
+      %>
+        <div id="associated_<%= association.klass.name.underscore %>" class="association">
+          <h3><%= attribute.titleize %></h3>
+          
+          <% if @item.send(attribute).empty? %>
+             <p>There are no <%= attribute.humanize.downcase %> associated with this <%= model_name.humanize.downcase %>.</p>
+          <% else %>
+            <% @list = @item.send(attribute) %>
+            <div id="list"><%= render :partial => CrudStar::Utility.get_partial(params[:controller], 'list_associated'), :locals => {:association => association} %></div>
+          <% end %>
+        </div>
+      <%
+      end
+    end %>
+  <% end %>
+</div>
+
+<% sidebar = yield(:sidebar) %>
+<% if !sidebar.nil? || user_has_permission?(:update) || user_has_permission?(:destroy) || !sidebar_actions_for_user(:view).empty? %>
+  <% unless sidebar.blank? %>
+    <div id="sidebar">
+      <%= sidebar %>
+    </div>
+  <% end %>
+  <% if !@disable_resources_sidebar %>
+    <% if user_has_permission?(:update) || user_has_permission?(:destroy) || !sidebar_actions_for_user(:view).empty? %>
+      <div id="sidebar">
+          <h5>Resources</h5>
+          <ul id="sidebar-nav">
+            <% if user_has_permission?(:update) %>
+              <li><%= link_to 'Edit ' + model_name.humanize, self.send(path_for_edit_resource(model), @item) %></li>
+            <% end %>
+            <% if user_has_permission?(:destroy) %>
+              <li><%= link_to 'Delete ' + model_name.humanize, self.send(path_for_resource(model), @item), 
+                              :method => :delete, :confirm => 'Are you sure you want to delete this ' + model_name.humanize.downcase + '?' %></li>
+            <% end %>
+            
+            <% sidebar_actions_for_user(:view).each do |option| %>
+              <li><%= link_to(option.first, option.last) %></li>
+            <% end %>
+          </ul>
+      </div>
+    <% end %>
+  <% end %>
+<% end %>

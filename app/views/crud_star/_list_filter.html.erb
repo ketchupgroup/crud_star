@@ -1,0 +1,13 @@
+<% if model.respond_to?(:list_filters) or model.respond_to?(:search) %>
+  <div id="list_filters">
+    <form method="get">
+      <fieldset>
+        <% if model.respond_to?(:search) %>
+          <%= select_tag('search_by', options_for_select(model.searchable_fields.collect { |f| [ f.to_s.humanize, f ] }, params[:search_by])) %>
+          <%= text_field_tag('search', params[:search]) %>
+          <input type="submit" value="Search" class="button" />   
+        <% end %>
+      </fieldset>
+    </form>
+  </div>
+<% end %>

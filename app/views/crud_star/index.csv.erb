@@ -1,0 +1,19 @@
+<%
+    headers = []
+    data = []
+
+    controller.export_attributes.each do |attribute|
+        headers << '"' + attribute.to_s.gsub('.', " ").humanize.gsub(/(")/, "\\\\\\1") + '"'
+    end
+
+    @list.each do |item|
+
+        data_item = []
+        controller.export_attributes.each do |attribute|
+	        data_item << '"' + display_value(item, attribute.to_s).to_s.gsub(/(")/, "\\\\\\1") + '"'
+	    end
+        data << data_item.join(',')
+    end
+
+%><%= raw headers.join ',' %>
+<%= raw data.join "\r\n" %>
