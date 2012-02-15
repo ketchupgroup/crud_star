@@ -3,7 +3,7 @@ module CrudStar
 
     config.application_name = 'CrudStar'
     config.url_path         = 'admin'
-    config.theme            = 'green'
+    config.theme            = 'red'
     
     # Define the navigation layers of the control panel.
     #
