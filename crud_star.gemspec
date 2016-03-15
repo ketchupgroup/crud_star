@@ -10,8 +10,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["John Butler, Peter Fealey"]
   s.date = %q{2010-11-05}
-  s.description = %q{"CrudStar is a complete piece of toss that we have to use in our Pub App System"}
-  s.email = %q{"support@ketchupgroup.com"}
+  s.description = ["CrudStar is a complete piece of toss that we have to use in our Pub App System"]
+  s.email = ["support@ketchupgroup.com"]
   s.extra_rdoc_files = [
     "LICENSE",
      "README.rdoc"
