@@ -13,27 +13,28 @@
 
 body {
 	background: #ffffff;
-	font: 12px/18px "Lucida Grande", "Lucida Sans", sans-serif;
-	color: #5b5e56;
+	font-family: 'Gill Sans', Arial, Georgia, 'Times New Roman', Times, serif;
+	color: #000;
 	}
 	
 a, a:visited, a:active {
-	color: #9fb03e;
-	text-decoration: none;
+	color: #005030;
+	background:transparent;
+	text-decoration: underline;
 	}
 
 a:hover {
-	background-color: #9fb03e;
-	color: #f4f2e9;
+	color: #005030;
+	background:transparent;
+	text-decoration: underline;
 	}
 	
 
 /* ------ HEADER START ------ */
 
 #header {
-	width: 100%;
-	background: #ffffff url(/images/crud_star/body-bg.jpg) top left repeat-x;
-	height: 84px;
+	background: #f9f7f3;
+	height: 100px;
 	}
 
 h1 {
@@ -45,11 +46,11 @@ h1 {
 	
 #login {
 	float: right;
-	color: #ebe9dc;
 	margin: 20px 50px 0 0;
 	padding: 0 0 0 25px;
 	height: 24px;
-	background: url(/images/crud_star/icon-user-green.png) 0 center no-repeat;
+	color: #005030;
+	background: transparent;
 	}
 
 #login p {
@@ -414,13 +415,15 @@ select {
 #loginarea {
 	margin: 40px auto;
 	width: 40%;
-	border: 1px solid #9fb03e;
+    	font-family: 'Gill Sans', Arial, Georgia, 'Times New Roman', Times, serif;
+	border: 1px solid #97662a;
 	}
 
 #login-welcome {
-	background: #f4f2e9;
-	border-bottom: 1px solid #dcd9c6;
-	color: #9fb03e;
+    	font-family: 'Gill Sans', Arial, Georgia, 'Times New Roman', Times, serif;
+	background: #f9f7f3;
+	border-bottom: 1px solid #97662a;
+	color: #000;
 	font-size: 14px;
 	text-transform: uppercase;
 	padding: 10px;
@@ -434,10 +437,10 @@ select {
 	}
 	
 #loginform input.loginfield {
-	border: 1px solid #dcd9c6;
-	background: #ffffff url(/images/crud_star/tralt-bg.jpg) top left repeat-x;
-	font: 16px/18px "Lucida Grande", "Lucida Sans", sans-serif;
-	color: #5b5e56;
+	font-family: 'Gill Sans', Arial, Georgia, 'Times New Roman', Times, serif;
+	border: 1px solid #97662a;
+	background: #f9f7f3;
+	color: #000;
 	display: block;
 	height: 30px;
 	width: 100%;
@@ -445,16 +448,19 @@ select {
 	}
 	
 #loginform .loginbutton {
-	border: 1px solid #dcd9c6;
+	font-family: 'Gill Sans', Arial, Georgia, 'Times New Roman', Times, serif;
+	border: 1px solid #97662a;
 	background-color: #ffffff;
-	color: #5b5e56;
+	color: #97662a;
 	padding: 5px 10px;
 	font-size: 16px;
+	text-transform: uppercase;
 	}
 
 #loginform .loginbutton:hover {
-	border: 1px solid #9fb03e;
-	color: #9fb03e;
+	font-family: 'Gill Sans', Arial, Georgia, 'Times New Roman', Times, serif;
+	border: 1px solid #97662a;
+	color: #97662a;
 	}
 
 
